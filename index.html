@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reader — Lectura rápida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["'Kumbh Sans'", 'sans-serif'],
+          },
+          colors: {
+            light: '#F3E9DE',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Kumbh+Sans:wght,YOPQ@100..900,300&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="sunlit.css">
+  <style type="text/tailwindcss">
+    @layer components {
+      .progress-bar-fill {
+        @apply h-full bg-black dark:bg-light transition-[width] duration-150;
+      }
+      .input-range-minimal {
+        @apply appearance-none bg-transparent;
+      }
+    }
+  </style>
+  <style>
+    .reader-preview-chunk {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
+    .reader-preview-chunk:hover {
+      opacity: 0.85;
+    }
+    .reader-preview-accordion .reader-preview-content {
+      overflow: hidden;
+      transition: max-height 0.25s ease-out;
+    }
+    .reader-preview-accordion.reader-preview-collapsed .reader-preview-content {
+      max-height: 0;
+    }
+    .reader-preview-accordion:not(.reader-preview-collapsed) .reader-preview-content {
+      max-height: 220px;
+    }
+    .reader-preview-chevron {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+    .reader-preview-current {
+      background-color: rgba(251, 191, 36, 0.35);
+      border-radius: 2px;
+    }
+    .dark .reader-preview-current {
+      background-color: rgba(251, 191, 36, 0.25);
+    }
+    input[type="range"].input-range-minimal { height: 2px; }
+    input[type="range"].input-range-minimal::-webkit-slider-runnable-track { height: 1px; background: #0a0a0a; border: none; }
+    input[type="range"].input-range-minimal::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: transparent; border: 1px solid #0a0a0a; margin-top: -4px; }
+    input[type="range"].input-range-minimal::-moz-range-track { height: 1px; background: #0a0a0a; border: none; }
+    input[type="range"].input-range-minimal::-moz-range-thumb { width: 10px; height: 10px; background: transparent; border: 1px solid #0a0a0a; }
+    .dark input[type="range"].input-range-minimal::-webkit-slider-runnable-track { background: #F3E9DE; }
+    .dark input[type="range"].input-range-minimal::-webkit-slider-thumb { border-color: #F3E9DE; }
+    .dark input[type="range"].input-range-minimal::-moz-range-track { background: #F3E9DE; }
+    .dark input[type="range"].input-range-minimal::-moz-range-thumb { border-color: #F3E9DE; }
+    #mainApp.main-app-hidden { visibility: hidden; pointer-events: none; }
+  </style>
+</head>
+<body class="font-sans text-stone-800 dark:text-stone-200 antialiased">
+  <div id="dappled-light">
+    <div id="glow"></div>
+    <div id="glow-bounce"></div>
+    <div class="sunlit-perspective">
+      <div id="sunlit-leaves">
+        <svg style="width: 0; height: 0; position: absolute;" aria-hidden="true">
+          <defs>
+            <filter id="wind" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" numOctaves="2" seed="1">
+                <animate attributeName="baseFrequency" dur="16s" keyTimes="0;0.33;0.66;1" values="0.005 0.003;0.01 0.009;0.008 0.004;0.005 0.003" repeatCount="indefinite" />
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic">
+                <animate attributeName="scale" dur="20s" keyTimes="0;0.25;0.5;0.75;1" values="45;55;75;55;45" repeatCount="indefinite" />
+              </feDisplacementMap>
+            </filter>
+          </defs>
+        </svg>
+      </div>
+      <div id="sunlit-blinds">
+        <div class="shutters">
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter"></div>
+        </div>
+        <div class="vertical">
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+    <div id="progressive-blur">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div id="mainApp" class="relative z-10 min-h-screen flex flex-col max-w-6xl mx-auto px-6 py-10 lg:py-12 main-app-hidden">
+    <header class="flex items-center justify-between mb-2">
+      <h1 id="appHeaderLogo" class="font-sans tracking-tight text-stone-800 dark:text-stone-200 w-fit text-[2em] cursor-pointer hover:opacity-80 transition-opacity" role="button" title="Volver al inicio" tabindex="0">Scriptorium</h1>
+      <button type="button" id="themeToggle" class="p-2 bg-transparent text-stone-800 dark:text-stone-200 transition-opacity hover:opacity-70" style="box-sizing: content-box; border: none;" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
+        <span id="themeIconDark" class="hidden dark:inline" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </span>
+        <span id="themeIconLight" class="inline dark:hidden" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </button>
+    </header>
+
+    <main class="flex-1 flex flex-col min-h-0">
+      <section class="input-section flex-1 grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 min-h-0 mb-8" id="inputSection">
+        <p class="lg:col-span-2 w-full h-fit text-[1em] text-stone-600 dark:text-stone-400 order-first mb-0">Pega un texto, ajusta palabras por vez y velocidad, y empieza a leer.</p>
+
+        <div class="flex flex-col min-h-0 gap-2">
+          <textarea
+            id="textInput"
+            class="flex-1 w-full p-4 text-base leading-relaxed border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 placeholder:text-stone-500 dark:placeholder:text-stone-500 focus:outline-none min-h-[200px] lg:min-h-0 resize-y"
+            placeholder="Pega aquí el texto que quieras leer…"
+            rows="12"
+          ></textarea>
+          <button type="button" id="btnClearText" class="font-sans text-sm font-medium self-end px-4 py-2 border border-stone-800 dark:border-stone-200 text-stone-800 dark:text-stone-200 hover:opacity-80 transition-opacity" title="Borrar todo el texto">Limpiar texto</button>
+        </div>
+
+        <div class="flex flex-col justify-between gap-8 lg:min-h-[420px]">
+          <div>
+            <label for="wordsPerChunk" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Palabras por vez</label>
+            <div class="flex items-center gap-3">
+              <input type="range" id="wordsPerChunk" min="1" max="5" value="1" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="wordsPerChunkValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">1</span>
+            </div>
+          </div>
+          <div>
+            <label for="speed" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Velocidad (palabras/min)</label>
+            <div class="flex items-center gap-3">
+              <input type="range" id="speed" min="60" max="600" value="240" step="20" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="speedValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">240</span>
+            </div>
+          </div>
+          <div>
+            <label for="fontSize" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Tamaño del texto</label>
+            <div class="flex items-center gap-3">
+              <input type="range" id="fontSize" min="1" max="5" value="3" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="fontSizeValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">3</span>
+            </div>
+          </div>
+          <div>
+            <label for="fontFamily" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Tipografía</label>
+            <select id="fontFamily" class="w-full p-2 border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 focus:outline-none">
+              <option value="'Caveat', cursive">Caveat</option>
+              <option value="'Kumbh Sans', sans-serif" selected>Kumbh Sans</option>
+              <option value="'Literata', serif">Literata</option>
+              <option value="'Shantell Sans', sans-serif">Shantell Sans</option>
+              <option value="'Zilla Slab', serif">Zilla Slab</option>
+            </select>
+            <div class="mt-2 p-3 border border-black dark:border-light bg-transparent min-h-[4rem] flex items-center justify-center" aria-live="polite">
+              <p id="fontPreview" class="text-xl sm:text-2xl text-stone-800 dark:text-stone-200 text-center leading-snug m-0" style="font-family: 'Kumbh Sans', sans-serif;">Así se verá el texto al leer</p>
+            </div>
+          </div>
+          <div class="pt-4 flex flex-col gap-2">
+            <button type="button" id="btnContinue" class="w-full py-3 text-base font-medium border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity hidden" title="Continuar desde el último avance guardado">Continuar lectura</button>
+            <button type="button" id="btnStart" class="w-full py-3 text-base font-medium border border-black dark:border-light bg-black dark:bg-light text-white dark:text-black hover:opacity-90 transition-opacity">Comenzar lectura</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="reader-section hidden fixed inset-0 flex flex-col items-center bg-transparent z-10" id="readerSection">
+        <div class="reader-view absolute top-0 left-0 right-0 bottom-[72px] w-full flex flex-col min-h-0">
+          <div id="readerCountdown" class="absolute inset-0 flex items-center justify-center z-20 bg-transparent pointer-events-none hidden" aria-live="polite" aria-atomic="true">
+            <span id="readerCountdownNumber" class="text-8xl font-medium tabular-nums text-stone-800 dark:text-stone-200 opacity-90" style="font-family: 'Kumbh Sans', sans-serif;">3</span>
+          </div>
+          <div class="flex-1 flex items-center justify-center p-6 min-h-0 shrink-0" id="readerWordWrap">
+            <span id="readerWord" class="text-3xl leading-snug text-center text-stone-800 dark:text-stone-200 max-w-[90%] md:whitespace-nowrap md:inline-block md:mx-auto" style="font-family: 'Kumbh Sans', sans-serif;"></span>
+          </div>
+          <div class="reader-preview-accordion reader-preview-collapsed flex flex-col min-h-0 shrink-0" id="readerPreviewWrap">
+            <button type="button" id="btnTogglePreview" class="reader-preview-header w-full flex items-center justify-end gap-2 px-4 py-2 text-left text-xs font-medium text-stone-500 dark:text-stone-400 hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer shrink-0" aria-expanded="false" aria-controls="readerPreviewContent" title="Mostrar vista previa">
+              <span class="reader-preview-chevron material-symbols-outlined text-stone-600 dark:text-stone-400" aria-hidden="true">notes</span>
+            </button>
+            <div id="readerPreviewContent" class="reader-preview-content" role="region" aria-label="Vista previa del texto">
+              <div id="readerTextPreview" class="reader-text-preview overflow-auto px-4 pb-4 pt-1 text-base leading-relaxed text-stone-700 dark:text-stone-300 min-h-[120px] max-h-[200px]" style="font-family: 'Kumbh Sans', sans-serif;" aria-label="Previsualización del texto completo con tu posición actual"></div>
+            </div>
+          </div>
+        </div>
+        <div class="reader-bar fixed bottom-0 left-0 right-0 flex flex-col flex-wrap">
+          <div class="w-full h-0.5 bg-[var(--light)] dark:bg-stone-600 overflow-hidden" id="readerBarProgressTrack" aria-hidden="true">
+            <div class="h-full bg-black dark:bg-light transition-[width] duration-150" id="readerBarProgressFill" style="width: 0%"></div>
+          </div>
+          <div class="flex flex-row items-center justify-center gap-4 md:gap-6 px-4 py-3 bg-transparent flex-wrap">
+          <div class="reader-bar-item flex items-center gap-2">
+            <label for="wordsPerChunkReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Palabras</label>
+            <div class="flex items-center gap-1.5">
+              <input type="range" id="wordsPerChunkReader" min="1" max="5" value="1" step="1" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
+              <span id="wordsPerChunkValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">1</span>
+            </div>
+          </div>
+          <div class="reader-bar-item flex items-center gap-2">
+            <label for="speedReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Velocidad</label>
+            <div class="flex items-center gap-1.5">
+              <input type="range" id="speedReader" min="60" max="600" value="240" step="20" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
+              <span id="speedValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">240</span>
+            </div>
+          </div>
+          <div class="reader-bar-item flex items-center gap-2">
+            <label for="fontSizeReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Tamaño</label>
+            <div class="flex items-center gap-1.5">
+              <input type="range" id="fontSizeReader" min="1" max="5" value="3" step="1" class="input-range-minimal w-16 text-stone-800 dark:text-stone-200">
+              <span id="fontSizeValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200 min-w-[3ch]">3</span>
+            </div>
+          </div>
+          <div class="reader-bar-item flex items-center gap-2">
+            <label for="fontFamilyReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Tipografía</label>
+            <select id="fontFamilyReader" class="min-w-0 p-1.5 text-sm border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 focus:outline-none max-w-[140px]">
+              <option value="'Caveat', cursive">Caveat</option>
+              <option value="'Kumbh Sans', sans-serif" selected>Kumbh Sans</option>
+              <option value="'Literata', serif">Literata</option>
+              <option value="'Shantell Sans', sans-serif">Shantell Sans</option>
+              <option value="'Zilla Slab', serif">Zilla Slab</option>
+            </select>
+          </div>
+          <div class="reader-bar-actions flex items-center gap-2">
+            <button type="button" class="btn-icon p-2 px-3 text-lg bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity" id="btnPause" title="Pausar">⏸</button>
+            <button type="button" class="btn-icon p-2 px-3 text-lg bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity hidden" id="btnResume" title="Reanudar">▶</button>
+            <button type="button" class="px-4 py-2 text-sm font-medium border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity" id="btnStop">Salir</button>
+          </div>
+          <div class="reader-bar-progress flex items-center gap-3 min-w-[100px]">
+            <div class="flex-1 min-w-[60px] h-0.5 border border-black dark:border-light bg-transparent overflow-hidden" id="progressBar">
+              <div class="progress-bar-fill w-0" id="progressBarFill"></div>
+            </div>
+            <span id="progressText" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap w-[100px]">0 / 0</span>
+          </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="startScreen" class="fixed inset-0 z-30 flex flex-col items-center justify-center px-6" aria-label="Scriptorium — Sala de lectura" role="dialog" aria-modal="true">
+    <h1 class="font-sans text-[4em] font-medium tracking-tight text-stone-800 dark:text-stone-200">Scriptorium</h1>
+    <p class="font-sans text-stone-600 dark:text-stone-400 text-[2em] mt-2">Sala de lectura</p>
+    <div class="w-full -mx-6 mt-8 sm:mx-0 sm:w-auto sm:mt-8 px-6 sm:px-0">
+      <button type="button" id="startScreenEnter" class="font-sans text-sm font-medium w-full sm:w-auto px-6 py-2.5 border border-stone-800 dark:border-stone-200 text-stone-800 dark:text-stone-200 hover:opacity-80 transition-opacity">Ingresar</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
