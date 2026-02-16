@@ -1,4 +1,4 @@
-# Reader — Lectura rápida
+# Scriptorium — Sala de lectura
 
 App web para lectura rápida: sube un PDF o pega texto, configura cuántas palabras ver a la vez y la velocidad, y lee por chunks.
 
@@ -39,3 +39,4 @@ App web para lectura rápida: sube un PDF o pega texto, configura cuántas palab
 
 - `index.html` — estructura, estilos Tailwind y controles.
 - `app.js` — lógica: tema, pestañas, extracción de PDF, chunks, velocidad y controles de lectura.
+- `sunlit.css` — estilos del fondo Sunlit (perspectiva, persianas, luz).
