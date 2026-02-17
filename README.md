@@ -29,6 +29,9 @@ App web para lectura rápida: sube un PDF o pega texto, configura cuántas palab
 5. **Tema**  
    El botón ☀️/🌙 en la cabecera cambia entre tema claro y oscuro. La preferencia se guarda en `localStorage`.
 
+6. **Guardado del texto**  
+   El texto que pegas o escribes en el área de texto se guarda automáticamente en tu navegador (localStorage). Si cierras la página y vuelves a entrar, el último texto seguirá ahí. Si pulsas "Limpiar texto", también se borra el texto guardado.
+
 ## Tecnologías
 
 - HTML, JavaScript vanilla y [Tailwind CSS](https://tailwindcss.com/) (CDN) para los estilos.

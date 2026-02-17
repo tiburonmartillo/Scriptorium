@@ -63,6 +63,25 @@
   }
 
   var PROGRESS_KEY = 'reader-progress';
+  var DRAFT_KEY = 'scriptorium-draft';
+  var draftSaveTimeout = null;
+
+  function saveDraft() {
+    if (!textInput) return;
+    try {
+      var val = textInput.value;
+      if (val) localStorage.setItem(DRAFT_KEY, val);
+      else localStorage.removeItem(DRAFT_KEY);
+    } catch (err) {}
+  }
+
+  function loadDraft() {
+    if (!textInput) return;
+    try {
+      var saved = localStorage.getItem(DRAFT_KEY);
+      if (saved != null) textInput.value = saved;
+    } catch (err) {}
+  }
 
   var chunks = [];
   var words = [];
@@ -447,9 +466,9 @@
   function startFromSavedProgress() {
     var progress = loadProgress();
     if (!progress) return;
-    var size = Math.max(1, Math.min(5, progress.wordsPerChunk || 1));
-    var spd = Math.max(60, Math.min(600, progress.speed || 240));
-    var fs = Math.max(1, Math.min(5, progress.fontSize || 3));
+    var size = Math.max(1, Math.min(5, progress.wordsPerChunk || 5));
+    var spd = Math.max(60, Math.min(600, progress.speed || 280));
+    var fs = Math.max(1, Math.min(5, progress.fontSize || 5));
     words = getWords(progress.text);
     currentChunkSize = size;
     chunks = buildChunks(words, size);
@@ -518,10 +537,18 @@
     }
   });
 
+  if (textInput) {
+    textInput.addEventListener('input', function () {
+      if (draftSaveTimeout) clearTimeout(draftSaveTimeout);
+      draftSaveTimeout = setTimeout(saveDraft, 500);
+    });
+  }
+
   var btnClearText = document.getElementById('btnClearText');
   if (btnClearText && textInput) {
     btnClearText.addEventListener('click', function () {
       textInput.value = '';
+      saveDraft();
       textInput.focus();
     });
   }
@@ -617,6 +644,12 @@
       document.body.classList.add('animation-ready');
       applyTheme(!isDarkTheme(), true);
     });
+    var themeToggleReader = document.getElementById('themeToggleReader');
+    if (themeToggleReader) {
+      themeToggleReader.addEventListener('click', function () {
+        themeToggle.click();
+      });
+    }
     (function initTheme() {
       try {
         var saved = localStorage.getItem('reader-theme');
@@ -689,5 +722,14 @@
         }
       });
     }
+    var readerHomeBtn = document.getElementById('readerHomeBtn');
+    if (readerHomeBtn) {
+      readerHomeBtn.addEventListener('click', function () {
+        stopReading();
+        goToStartScreen();
+      });
+    }
   })();
+
+  loadDraft();
 })();

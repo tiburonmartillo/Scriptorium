@@ -141,7 +141,7 @@
   </div>
 
   <div id="mainApp" class="relative z-10 min-h-screen flex flex-col max-w-6xl mx-auto px-6 py-10 lg:py-12 main-app-hidden">
-    <header class="flex items-center justify-between mb-2">
+    <header class="flex items-center justify-between mb-2 relative z-[1000]">
       <h1 id="appHeaderLogo" class="font-sans tracking-tight text-stone-800 dark:text-stone-200 w-fit text-[2em] cursor-pointer hover:opacity-80 transition-opacity" role="button" title="Volver al inicio" tabindex="0">Scriptorium</h1>
       <button type="button" id="themeToggle" class="p-2 bg-transparent text-stone-800 dark:text-stone-200 transition-opacity hover:opacity-70" style="box-sizing: content-box; border: none;" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
         <span id="themeIconDark" class="hidden dark:inline" aria-hidden="true">
@@ -155,14 +155,14 @@
 
     <main class="flex-1 flex flex-col min-h-0">
       <section class="input-section flex-1 grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 min-h-0 mb-8" id="inputSection">
-        <p class="lg:col-span-2 w-full h-fit text-[1em] text-stone-600 dark:text-stone-400 order-first mb-0">Pega un texto, ajusta palabras por vez y velocidad, y empieza a leer.</p>
+        <p class="lg:col-span-2 w-full h-fit text-[1em] text-stone-600 dark:text-stone-400 order-first mb-0">Pega un texto, ajusta palabras por vez, velocidad, tamaño de tipografía, y empieza a leer.</p>
 
         <div class="flex flex-col min-h-0 gap-2">
           <textarea
             id="textInput"
-            class="flex-1 w-full p-4 text-base leading-relaxed border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 placeholder:text-stone-500 dark:placeholder:text-stone-500 focus:outline-none min-h-[200px] lg:min-h-0 resize-y"
+            class="flex-1 w-full min-h-0 p-4 text-base leading-relaxed border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 placeholder:text-stone-500 dark:placeholder:text-stone-500 focus:outline-none max-h-[220px] lg:max-h-none resize-y"
             placeholder="Pega aquí el texto que quieras leer…"
-            rows="12"
+            rows="6"
           ></textarea>
           <button type="button" id="btnClearText" class="font-sans text-sm font-medium self-end px-4 py-2 border border-stone-800 dark:border-stone-200 text-stone-800 dark:text-stone-200 hover:opacity-80 transition-opacity" title="Borrar todo el texto">Limpiar texto</button>
         </div>
@@ -171,22 +171,22 @@
           <div>
             <label for="wordsPerChunk" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Palabras por vez</label>
             <div class="flex items-center gap-3">
-              <input type="range" id="wordsPerChunk" min="1" max="5" value="1" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
-              <span id="wordsPerChunkValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">1</span>
+              <input type="range" id="wordsPerChunk" min="1" max="5" value="5" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="wordsPerChunkValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">5</span>
             </div>
           </div>
           <div>
             <label for="speed" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Velocidad (palabras/min)</label>
             <div class="flex items-center gap-3">
-              <input type="range" id="speed" min="60" max="600" value="240" step="20" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
-              <span id="speedValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">240</span>
+              <input type="range" id="speed" min="60" max="600" value="280" step="20" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="speedValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">280</span>
             </div>
           </div>
           <div>
             <label for="fontSize" class="block text-sm font-medium text-stone-600 dark:text-stone-400 mb-1.5">Tamaño del texto</label>
             <div class="flex items-center gap-3">
-              <input type="range" id="fontSize" min="1" max="5" value="3" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
-              <span id="fontSizeValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">3</span>
+              <input type="range" id="fontSize" min="1" max="5" value="5" step="1" class="input-range-minimal flex-1 text-stone-800 dark:text-stone-200">
+              <span id="fontSizeValue" class="min-w-[3ch] text-sm font-medium text-stone-800 dark:text-stone-200">5</span>
             </div>
           </div>
           <div>
@@ -210,7 +210,7 @@
       </section>
 
       <section class="reader-section hidden fixed inset-0 flex flex-col items-center bg-transparent z-10" id="readerSection">
-        <div class="reader-view absolute top-0 left-0 right-0 bottom-[72px] w-full flex flex-col min-h-0">
+        <div class="reader-view absolute top-0 left-0 right-0 bottom-[140px] sm:bottom-[72px] w-full flex flex-col min-h-0">
           <div id="readerCountdown" class="absolute inset-0 flex items-center justify-center z-20 bg-transparent pointer-events-none hidden" aria-live="polite" aria-atomic="true">
             <span id="readerCountdownNumber" class="text-8xl font-medium tabular-nums text-stone-800 dark:text-stone-200 opacity-90" style="font-family: 'Kumbh Sans', sans-serif;">3</span>
           </div>
@@ -226,7 +226,7 @@
             </div>
           </div>
         </div>
-        <div class="reader-bar fixed bottom-0 left-0 right-0 flex flex-col flex-wrap">
+        <div class="reader-bar fixed bottom-0 left-0 right-0 z-20 flex flex-col flex-wrap">
           <div class="w-full h-0.5 bg-[var(--light)] dark:bg-stone-600 overflow-hidden" id="readerBarProgressTrack" aria-hidden="true">
             <div class="h-full bg-black dark:bg-light transition-[width] duration-150" id="readerBarProgressFill" style="width: 0%"></div>
           </div>
@@ -234,22 +234,22 @@
           <div class="reader-bar-item flex items-center gap-2">
             <label for="wordsPerChunkReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Palabras</label>
             <div class="flex items-center gap-1.5">
-              <input type="range" id="wordsPerChunkReader" min="1" max="5" value="1" step="1" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
-              <span id="wordsPerChunkValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">1</span>
+              <input type="range" id="wordsPerChunkReader" min="1" max="5" value="5" step="1" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
+              <span id="wordsPerChunkValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">5</span>
             </div>
           </div>
           <div class="reader-bar-item flex items-center gap-2">
             <label for="speedReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Velocidad</label>
             <div class="flex items-center gap-1.5">
-              <input type="range" id="speedReader" min="60" max="600" value="240" step="20" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
-              <span id="speedValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">240</span>
+              <input type="range" id="speedReader" min="60" max="600" value="280" step="20" class="input-range-minimal w-20 text-stone-800 dark:text-stone-200">
+              <span id="speedValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200">280</span>
             </div>
           </div>
           <div class="reader-bar-item flex items-center gap-2">
             <label for="fontSizeReader" class="text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap m-0">Tamaño</label>
             <div class="flex items-center gap-1.5">
-              <input type="range" id="fontSizeReader" min="1" max="5" value="3" step="1" class="input-range-minimal w-16 text-stone-800 dark:text-stone-200">
-              <span id="fontSizeValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200 min-w-[3ch]">3</span>
+              <input type="range" id="fontSizeReader" min="1" max="5" value="5" step="1" class="input-range-minimal w-16 text-stone-800 dark:text-stone-200">
+              <span id="fontSizeValueReader" class="text-sm font-medium text-stone-800 dark:text-stone-200 min-w-[3ch]">5</span>
             </div>
           </div>
           <div class="reader-bar-item flex items-center gap-2">
@@ -263,6 +263,15 @@
             </select>
           </div>
           <div class="reader-bar-actions flex items-center gap-2">
+            <button type="button" id="readerHomeBtn" class="font-sans text-sm font-medium px-3 py-2 border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity" title="Volver al inicio" aria-label="Volver al inicio">Inicio</button>
+            <button type="button" id="themeToggleReader" class="p-2 bg-transparent text-stone-800 dark:text-stone-200 transition-opacity hover:opacity-70" style="box-sizing: content-box; border: none;" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
+              <span class="hidden dark:inline" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </span>
+              <span class="inline dark:hidden" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              </span>
+            </button>
             <button type="button" class="btn-icon p-2 px-3 text-lg bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity" id="btnPause" title="Pausar">⏸</button>
             <button type="button" class="btn-icon p-2 px-3 text-lg bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity hidden" id="btnResume" title="Reanudar">▶</button>
             <button type="button" class="px-4 py-2 text-sm font-medium border border-black dark:border-light bg-transparent text-stone-800 dark:text-stone-200 hover:opacity-70 transition-opacity" id="btnStop">Salir</button>
@@ -282,7 +291,7 @@
 
   <div id="startScreen" class="fixed inset-0 z-30 flex flex-col items-center justify-center px-6" aria-label="Scriptorium — Sala de lectura" role="dialog" aria-modal="true">
     <h1 class="font-sans text-[4em] font-medium tracking-tight text-stone-800 dark:text-stone-200">Scriptorium</h1>
-    <p class="font-sans text-stone-600 dark:text-stone-400 text-[2em] mt-2">Sala de lectura</p>
+    <p class="font-sans text-stone-600 dark:text-stone-400 text-[2em] mt-2" style="font-family: 'Caveat', cursive;">Sala de lectura</p>
     <div class="w-full -mx-6 mt-8 sm:mx-0 sm:w-auto sm:mt-8 px-6 sm:px-0">
       <button type="button" id="startScreenEnter" class="font-sans text-sm font-medium w-full sm:w-auto px-6 py-2.5 border border-stone-800 dark:border-stone-200 text-stone-800 dark:text-stone-200 hover:opacity-80 transition-opacity">Ingresar</button>
     </div>
